@@ -7,6 +7,7 @@
   <a href="mailto:jheison.mb@gmail.com"><img src="https://img.shields.io/badge/Email-jheison.mb%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/></a>
   <a href="https://www.linkedin.com/in/jheison-martinez-bolivar/"><img src="https://img.shields.io/badge/LinkedIn-Jheison_Martinez_Bolivar-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
   <a href="https://github.com/UniverLab"><img src="https://img.shields.io/badge/Org-UniverLab-6A5ACD?style=for-the-badge&logo=github" alt="UniverLab"/></a>
+  <a href="https://univerlab.org"><img src="https://img.shields.io/badge/Web-univerlab.org-6A5ACD?style=for-the-badge&logo=googlechrome&logoColor=white" alt="UniverLab.org"/></a>
   <img src="https://img.shields.io/badge/MSc-AI%20(in%20progress)-2E8B57?style=for-the-badge" alt="MSc AI"/>
 </p>
 
@@ -20,7 +21,7 @@ I am an Electronic Engineer and Full-Stack Software Engineer focused on Rust CLI
 
 ```yaml
 name: Jheison Martinez Bolivar
-role: Senior Software Engineer @ Accenture
+role: IA Engineer @ Accenture | Founder @ UniverLab
 location: Colombia
 focus:
   - Rust CLI architecture
@@ -34,17 +35,6 @@ currently_building:
 education:
   - MSc in Artificial Intelligence (2026-2027)
 ```
-
----
-
-## 🚀 Current Work
-
-| Project | Purpose | Status |
-|---|---|---|
-| [`texforge`](https://github.com/UniverLab/texforge) | Self-contained LaTeX compiler CLI | Published |
-| [`gitkit`](https://github.com/UniverLab/gitkit) | Git setup and repo configuration CLI | Published |
-| [`ghscaff`](https://github.com/UniverLab/ghscaff) | Interactive GitHub scaffolder | Published |
-| [`agent-canopy`](https://github.com/UniverLab/agent-canopy) | Agent orchestration daemon | In progress |
 
 ---
 
