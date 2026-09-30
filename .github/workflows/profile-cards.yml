@@ -1,0 +1,59 @@
+name: Profile cards
+
+# Rebuilds the GitHub history card once a day and publishes it on the `output`
+# branch (a single force-pushed commit), so main's history stays clean. The
+# README loads it from raw.githubusercontent.com/JheisonMB/JheisonMB/output/.
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/**"
+      - ".github/workflows/profile-cards.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-cards
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: scripts/package-lock.json
+
+      - name: Install
+        working-directory: scripts
+        run: npm ci
+
+      - name: Build the history card
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/build-profile.mjs history out
+
+      - name: Publish to the output branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          cd out
+          git init -q -b output
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "chore: refresh profile cards"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" output

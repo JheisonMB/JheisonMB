@@ -1,0 +1,14 @@
+{
+  "name": "jheisonmb-profile-cards",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Self-hosted SVG header and GitHub history card for the profile README.",
+  "scripts": {
+    "header": "node build-profile.mjs header",
+    "history": "node build-profile.mjs history ../out"
+  },
+  "dependencies": {
+    "opentype.js": "^1.3.4"
+  }
+}

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=190&color=gradient&text=Jheison%20Martinez%20Bolivar&fontAlignY=35&fontSize=36&desc=Building%20useful%20tools%20with%20ethics,%20clarity,%20and%20wonder&descAlignY=58&animation=fadeIn" alt="header"/>
+  <img src="https://raw.githubusercontent.com/JheisonMB/JheisonMB/main/assets/header.svg" alt="Jheison Martinez Bolivar — Building useful tools with ethics, clarity, and wonder"/>
 </p>
 
 <p align="center">
@@ -60,8 +60,7 @@ education:
 ## 📈 GitHub History
 
 <p align="center">
-  <img height="165" src="https://github-readme-stats-sigma-five.vercel.app/api?username=JheisonMB&show_icons=true&theme=tokyonight&hide_border=true&rank_icon=github&cache_seconds=86400" alt="GitHub stats"/>
-  <img height="165" src="https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=JheisonMB&layout=compact&theme=tokyonight&hide_border=true&langs_count=8&cache_seconds=86400" alt="Top languages"/>
+  <img src="https://raw.githubusercontent.com/JheisonMB/JheisonMB/output/github-history.svg" alt="GitHub activity over the last 12 months: contributions, commits, pull requests, contribution calendar and languages"/>
 </p>
 
 ---
