@@ -96,7 +96,7 @@ function buildHeader() {
 
   const kicker = 'ELECTRONIC ENGINEER · AI ENGINEER · FOUNDER @ UNIVERLAB';
   const name = 'JHEISON MARTINEZ BOLIVAR';
-  const tagline = 'Building useful tools with ethics, clarity, and wonder.';
+  const tagline = 'Building useful tools with rigor, ethics, and wonder.';
 
   const nameSize = 42;
   const nameTrack = 0.1;

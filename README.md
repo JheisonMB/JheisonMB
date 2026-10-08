@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JheisonMB/JheisonMB/main/assets/header.svg" alt="Jheison Martinez Bolivar — Building useful tools with ethics, clarity, and wonder"/>
+  <img src="https://raw.githubusercontent.com/JheisonMB/JheisonMB/main/assets/header.svg" alt="Jheison Martinez Bolivar — Building useful tools with rigor, ethics, and wonder"/>
 </p>
 
 <p align="center">
