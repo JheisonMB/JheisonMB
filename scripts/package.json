@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Self-hosted SVG header and GitHub history card for the profile README.",
+  "description": "Self-hosted SVG header, GitHub history card and LinkedIn banner for the profile.",
   "scripts": {
     "header": "node build-profile.mjs header",
-    "history": "node build-profile.mjs history ../out"
+    "history": "node build-profile.mjs history ../out",
+    "linkedin": "node build-linkedin.mjs"
   },
   "dependencies": {
     "opentype.js": "^1.3.4"
