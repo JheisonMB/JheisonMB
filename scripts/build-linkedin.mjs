@@ -87,11 +87,11 @@ function airyStar(x, y) {
 // Drawn like a figure in a graph-theory paper: vertices carry italic symbols.
 function agentGraph() {
   const y = 56;
-  const step = 57;
-  const R = 13;
+  const step = 70;
+  const R = 14;
   // The drafts are the sources: every spec fans out to them first.
   const V = {
-    d1: [R, y - 44], d2: [R, y], d3: [R, y + 44],
+    d1: [R, y - 40], d2: [R, y], d3: [R, y + 40],
     q: [R + step, y], i: [R + 2 * step, y], g: [R + 3 * step, y], c: [R + 4 * step, y],
   };
   const edge = (a, b, ra = R, rb = R) => {
@@ -109,16 +109,16 @@ function agentGraph() {
   const [qx, qy] = V.q;
   const [gx, gy] = V.g;
   const [ix, iy] = V.i;
-  const Q = 14;
+  const Q = 16;
   return `
     ${['d1', 'd2', 'd3'].map((d) => edge(d, 'q', R, Q)).join('')}
-    ${edge('q', 'i', Q)}${edge('i', 'g', R, 12)}${edge('g', 'c', 12)}
-    <path d="M ${gx} ${gy + 13} C ${gx} ${gy + 48}, ${ix} ${iy + 48}, ${ix} ${iy + R + 3}" fill="none" stroke="${VERMILION}" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#tipFail)"/>
+    ${edge('q', 'i', Q)}${edge('i', 'g', R, 13)}${edge('g', 'c', 13)}
+    <path d="M ${gx} ${gy + 14} C ${gx} ${gy + 46}, ${ix} ${iy + 46}, ${ix} ${iy + R + 3}" fill="none" stroke="${VERMILION}" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#tipFail)"/>
     ${['d1', 'd2', 'd3'].map((d, n) => circle(d, PAPER, BLUE) + label(d, 'd', String(n + 1), BLUE)).join('')}
     <path d="M ${qx} ${qy - Q} L ${qx + Q} ${qy} L ${qx} ${qy + Q} L ${qx - Q} ${qy} Z" fill="${PAPER}" stroke="${INK}" stroke-width="1.6"/>
     ${label('q', 'q')}
     ${circle('i')}${label('i', 'i')}
-    <rect x="${gx - 12}" y="${gy - 12}" width="24" height="24" fill="${INK}"/>${label('g', 'g', '', PAPER)}
+    <rect x="${gx - 13}" y="${gy - 13}" width="26" height="26" fill="${INK}"/>${label('g', 'g', '', PAPER)}
     ${circle('c', BLUE, BLUE)}${label('c', 'c', '', PAPER)}`;
 }
 
@@ -135,32 +135,33 @@ html,body{width:${W}px;height:${H}px;background:${PAPER};color:${INK};overflow:h
 .page{position:relative;width:${W}px;height:${H}px}
 svg{position:absolute;inset:0}
 .run{position:absolute;top:20px;font-family:'Plex';font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:${INK_DIM}}
-.kicker{position:absolute;left:602px;top:76px;font-family:'Plex';font-size:15px;letter-spacing:.2em;color:${BLUE}}
-.lede{position:absolute;left:600px;top:100px;width:540px;font-family:'STIX';font-size:39px;line-height:1.12;letter-spacing:-.005em}
+.kicker{position:absolute;left:562px;top:76px;font-family:'Plex';font-size:15px;letter-spacing:.2em;color:${BLUE}}
+.lede{position:absolute;left:560px;top:100px;width:500px;font-family:'STIX';font-size:39px;line-height:1.12;letter-spacing:-.005em}
 .lede em{font-style:italic;color:${BLUE}}
-.eqs{position:absolute;left:602px;top:212px;width:498px;font-family:'STIX'}
+.eqs{position:absolute;left:562px;top:212px;width:478px;font-family:'STIX'}
 .eq{display:flex;align-items:baseline;justify-content:space-between;height:56px;padding-top:7px;border-top:1.5px solid ${RULE}}
 .eq:last-child{border-bottom:1.5px solid ${RULE}}
 .math{font-style:italic;font-size:30px;white-space:nowrap}
 .math .up{font-style:normal}
 .no{font-size:20px;color:${INK_DIM}}
 sub{font-size:62%;vertical-align:-.3em;line-height:0}
-.fig{position:absolute;left:1138px;top:74px;font-family:'STIX';font-size:17px;color:${INK_DIM}}
+.fig{position:absolute;left:1090px;top:196px;width:312px;font-family:'STIX';font-size:16px;line-height:1.28;color:${INK_DIM}}
+.nw{white-space:nowrap}
 .fig b{font-weight:600;color:${INK}}
 .fig i{color:${INK}}
-.listing{position:absolute;left:1138px;top:262px;width:256px;padding:8px 0 8px 10px;border-left:3px solid ${RULE};background:#f1eee6;font-family:'Plex';font-size:15.5px;line-height:1.5;color:${INK}}
+.listing{position:absolute;left:1090px;top:256px;width:304px;padding:7px 0 7px 10px;border-left:3px solid ${RULE};background:#f1eee6;font-family:'Plex';font-size:15px;line-height:1.45;color:${INK}}
 .listing .k{color:${INK}}
 .listing .s{color:${BLUE}}
 .listing .f{color:${VERMILION}}
 text.tag{font-family:'STIX';font-style:italic;font-size:16px;fill:${INK_DIM};text-anchor:end}
-text.v{font-family:'STIX';font-style:italic;font-size:19px;text-anchor:middle}
-tspan.vsub{font-size:12px;font-style:normal}
+text.v{font-family:'STIX';font-style:italic;font-size:21px;text-anchor:middle}
+tspan.vsub{font-size:13px;font-style:normal}
 </style></head><body><div class="page">
 <svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <defs>
     <marker id="tip" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="${INK}"/></marker>
     <marker id="tipFail" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="4.5" markerHeight="4.5" orient="auto"><path d="M0 0 L6 3 L0 6 Z" fill="${VERMILION}"/></marker>
-    <linearGradient id="skyFade" gradientUnits="userSpaceOnUse" x1="380" x2="590" y1="0" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
+    <linearGradient id="skyFade" gradientUnits="userSpaceOnUse" x1="340" x2="540" y1="0" y2="0"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
     <mask id="sky"><rect width="${W}" height="${H}" fill="url(#skyFade)"/></mask>
     <clipPath id="skyClip"><rect x="0" y="58" width="${W}" height="${H - 86}"/></clipPath>
   </defs>
@@ -168,8 +169,8 @@ tspan.vsub{font-size:12px;font-style:normal}
   <line x1="40" y1="${H - 26}" x2="${W - 40}" y2="${H - 26}" stroke="${RULE}" stroke-width="1.5"/>
   <g mask="url(#sky)" clip-path="url(#skyClip)">${skyChart()}</g>
   ${airyStar(470, 136)}
-  <line x1="1118" y1="78" x2="1118" y2="356" stroke="${RULE}" stroke-width="1.5"/>
-  <g transform="translate(1138 108)">${agentGraph()}</g>
+  <line x1="1066" y1="78" x2="1066" y2="356" stroke="${RULE}" stroke-width="1.5"/>
+  <g transform="translate(1090 66)">${agentGraph()}</g>
 </svg>
 <div class="run" style="left:40px">Computational notes · Vol. 01</div>
 <div class="run" style="right:40px">univerlab.org</div>
@@ -179,7 +180,7 @@ tspan.vsub{font-size:12px;font-style:normal}
   <div class="eq"><span class="math">y = σ(<span class="up">Σ</span><sub>i</sub> w<sub>i</sub>&#8201;x<sub>i</sub> + b)</span><span class="no">(1)</span></div>
   <div class="eq"><span class="math"><span class="up">cos</span> θ = q <span class="up">·</span> d / ‖q‖ ‖d‖</span><span class="no">(2)</span></div>
 </div>
-<div class="fig"><b>Fig. 1.</b> <i>G</i> = (<i>V</i>, <i>E</i>)</div>
+<div class="fig"><b>Fig. 1.</b> Drafts <span class="nw"><i>d</i><sub>1</sub>–<i>d</i><sub>3</sub></span> vote, quorum <i>q</i> decides; gate <i>g</i> returns failures to <i>i</i>; <i>c</i> commits.</div>
 <pre class="listing">{ <span class="k">"from_node"</span>: <span class="s">"g"</span>,
   <span class="k">"to_node"</span>: <span class="s">"i"</span>,
   <span class="k">"condition"</span>: <span class="f">"fail"</span> }</pre>
