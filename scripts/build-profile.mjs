@@ -2,8 +2,10 @@
 // services (capsule-render, github-readme-stats) in the rendering path.
 //
 // GitHub serves README SVGs as images and loads no custom fonts, so every
-// piece of text is outlined to vector <path> here. Brand tokens and fonts are
-// UniverLab's (UniverLab/.github scripts/build-banners.mjs).
+// piece of text is outlined to vector <path> here. Brand tokens, fonts and the
+// slate ground are UniverLab's night (UniverLab/.github scripts/build-banners.mjs):
+// chalk on a slate board, Sometype Mono for the typewriter voice, Old Standard TT
+// for the engraving voice.
 //
 //   node build-profile.mjs header            → ../assets/header.svg (static, committed)
 //   node build-profile.mjs history <outdir>  → <outdir>/github-history.svg
@@ -11,22 +13,31 @@
 //                                              .github/workflows/profile-cards.yml)
 
 import opentype from 'opentype.js';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
 // ── Brand tokens ────────────────────────────────────────────────────────────
-const BG = '#0a0b0e';
-const INK = '#e8e6e1';
-const INK_DIM = '#8b8a86';
-const INK_FAINT = '#4a4a48';
+const BG = '#222928';
+const INK = '#ecebe4';
+const INK_DIM = '#b9bdb5';
+const INK_FAINT = '#6f7873';
 const ACCENT = '#e6c84a';
-const CELL_EMPTY = '#16181d';
+const CELL_EMPTY = '#2d3534';
 
-const mono = opentype.loadSync(join(HERE, 'fonts', 'IBMPlexMono-500.ttf'));
-const grotesk = opentype.loadSync(join(HERE, 'fonts', 'SpaceGrotesk-500.ttf'));
+const mono = opentype.loadSync(join(HERE, 'fonts', 'SometypeMono-wght.ttf'));
+const serif = opentype.loadSync(join(HERE, 'fonts', 'OldStandard-Regular.ttf'));
+const italic = opentype.loadSync(join(HERE, 'fonts', 'OldStandard-Italic.ttf'));
+const serifBold = opentype.loadSync(join(HERE, 'fonts', 'OldStandard-Bold.ttf'));
+// STIX Two for mathematics: it carries the Greek and the operators Old Standard lacks.
+const mathItalic = opentype.loadSync(join(HERE, 'fonts', 'STIXTwoText-Italic.ttf'));
+const mathUpright = opentype.loadSync(join(HERE, 'fonts', 'STIXTwoText.ttf'));
+
+// The slate tile, embedded so every card stays a self-contained SVG.
+const SLATE_TILE = `data:image/webp;base64,${readFileSync(join(HERE, 'assets', 'pizarra.webp')).toString('base64')}`;
+const SLATE_PATTERN = `<pattern id="slate" width="341" height="341" patternUnits="userSpaceOnUse"><image href="${SLATE_TILE}" width="341" height="341"/></pattern>`;
 
 const LOGIN = process.env.PROFILE_LOGIN || 'JheisonMB';
 const ORG = process.env.PROFILE_ORG || 'UniverLab';
@@ -89,93 +100,104 @@ function rng(seed) {
 const fmt = (n) => n.toLocaleString('en-US');
 
 // ── Header ──────────────────────────────────────────────────────────────────
+// A lecture board in chalk: the name block on the left; on the right, the
+// thesis's denoising objective as equation (1) and Fig. 1, a star's profile as
+// observed (noisy) and as recovered. Academic, like the LinkedIn banner, but
+// with its own content.
 function buildHeader() {
   const W = 1280;
-  const H = 300;
+  const H = 330;
   const X = 72;
 
   const kicker = 'ELECTRONIC ENGINEER · AI ENGINEER · FOUNDER @ UNIVERLAB';
   const name = 'JHEISON MARTINEZ BOLIVAR';
   const tagline = 'Building useful tools with rigor, ethics, and wonder.';
 
-  const nameSize = 42;
-  const nameTrack = 0.1;
-  const nameBase = 150;
-  const nameW = measure(mono, name, nameSize, nameTrack);
+  const nameSize = 34;
+  const nameTrack = 0.08;
+  const nameBase = 158;
 
-  // Orbit system, right side: three tilted ellipses around a bright core.
-  const cx = 1085;
-  const cy = 150;
-  const orbits = [
-    { rx: 150, ry: 46, dur: 38, r: 4.2, op: 0.9 },
-    { rx: 104, ry: 32, dur: 23, r: 3.2, op: 0.75 },
-    { rx: 62, ry: 19, dur: 14, r: 2.4, op: 0.6 },
+  // Right column: equation (1) on top, Fig. 1 under it, a chalk rule between.
+  const RX = 790;
+  const RW = W - 72 - RX;
+  const eqBase = 98;
+  const eqSize = 29;
+  const eq = [
+    [mathItalic, 'x', 0], [mathUpright, ' = arg min ', 0], [mathItalic, '‖y − x‖', 0], [mathUpright, '²', -10],
+    [mathUpright, ' + ', 0], [mathItalic, 'λ', 0], [mathItalic, ' R(x)', 0],
   ];
-  const tilt = -16;
-  const orbitSvg = orbits
-    .map(({ rx, ry, dur, r, op }, i) => {
-      const id = `orbit${i}`;
-      const d = `M ${cx - rx} ${cy} a ${rx} ${ry} 0 1 0 ${2 * rx} 0 a ${rx} ${ry} 0 1 0 ${-2 * rx} 0`;
-      return `<path id="${id}" d="${d}" fill="none" stroke="${INK}" stroke-opacity="${0.1 + i * 0.03}" stroke-width="1"/>
-      <circle r="${r}" fill="${ACCENT}" fill-opacity="${op}">
-        <animateMotion dur="${dur}s" repeatCount="indefinite" rotate="0"><mpath href="#${id}"/></animateMotion>
-      </circle>`;
-    })
-    .join('\n      ');
+  let ex = RX;
+  const eqParts = eq.map(([font, str, dy]) => {
+    const size = dy ? eqSize * 0.62 : eqSize;
+    const out = text(font, str, ex, eqBase + dy, size, INK);
+    ex += measure(font, str, size);
+    return out;
+  });
+  // The hat on the estimate, and the "x" under arg min.
+  const xw = measure(mathItalic, 'x', eqSize);
+  const hat = `<path d="M${RX + xw * 0.18} ${eqBase - 22} L${RX + xw * 0.55} ${eqBase - 28} L${RX + xw * 0.92} ${eqBase - 22}" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const argX = RX + measure(mathItalic, 'x', eqSize) + measure(mathUpright, ' = arg ', eqSize);
+  const under = text(mathItalic, 'x', argX + measure(mathUpright, 'min', eqSize) / 2, eqBase + 20, eqSize * 0.5, INK, { anchor: 'middle' });
+  const eqNum = text(mathUpright, '(1)', RX + RW, eqBase, 22, INK_DIM, { anchor: 'end' });
 
-  // Starfield, kept off the text block by the mask below.
-  const rand = rng(20210201);
-  const stars = [];
-  for (let i = 0; i < 90; i++) {
-    const x = 520 + rand() * (W - 520);
-    const y = 12 + rand() * (H - 24);
-    const r = 0.5 + rand() * 1.1;
-    const op = 0.15 + rand() * 0.45;
-    const twinkle = rand() < 0.18;
-    stars.push(
-      twinkle
-        ? `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="${INK}" opacity="${op.toFixed(2)}"><animate attributeName="opacity" values="${op.toFixed(2)};0.05;${op.toFixed(2)}" dur="${(3 + rand() * 4).toFixed(1)}s" repeatCount="indefinite"/></circle>`
-        : `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="${INK}" opacity="${op.toFixed(2)}"/>`,
-    );
+  // Fig. 1: a star's profile, observed (noisy chalk) and recovered (gold).
+  const fx = RX + 8, fy = 134, fw = RW - 16, fh = 118;
+  const N = 90;
+  const rand = rng(20261020);
+  const gauss = (t) => Math.exp(-((t - 0.5) ** 2) / (2 * 0.07 ** 2));
+  const pt = (t, v) => `${(fx + t * fw).toFixed(1)} ${(fy + fh - 8 - v * (fh - 24)).toFixed(1)}`;
+  let noisy = '';
+  let clean = '';
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const g = gauss(t) * 0.82 + 0.08;
+    noisy += `${i ? 'L' : 'M'}${pt(t, Math.max(0, Math.min(1, g + (rand() - 0.5) * 0.22)))} `;
+    clean += `${i ? 'L' : 'M'}${pt(t, g)} `;
   }
-
-  const fadeStart = Math.min(0.6, (X + nameW + 40) / W).toFixed(3);
-  const fadeFull = Math.min(0.75, Number(fadeStart) + 0.12).toFixed(3);
+  const axes = `<path d="M${fx} ${fy} V${fy + fh} H${fx + fw}" fill="none" stroke="${INK}" stroke-opacity=".75" stroke-width="1.8" stroke-linecap="round"/>`
+    + [0.25, 0.5, 0.75].map((t) => `<path d="M${(fx + t * fw).toFixed(1)} ${fy + fh} v6" stroke="${INK}" stroke-opacity=".6" stroke-width="1.4"/>`).join('');
+  const fig = `${axes}
+  <path d="${noisy}" fill="none" stroke="${INK}" stroke-opacity=".7" stroke-width="1.5" stroke-linejoin="round"/>
+  <path d="${clean}" fill="none" stroke="${ACCENT}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  ${text(mono, 'FLUX', fx + 8, fy + 12, 10.5, INK_DIM, { track: 0.12 })}
+  ${text(mono, 'PIXEL', fx + fw, fy + fh + 20, 10.5, INK_DIM, { track: 0.12, anchor: 'end' })}`;
+  const capBase = fy + fh + 34;
+  const caption = `${text(serifBold, 'Fig. 1.', RX, capBase, 16, INK)}
+  ${text(italic, 'A star’s profile, observed and recovered.', RX + measure(serifBold, 'Fig. 1. ', 16), capBase, 16, INK_DIM)}`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${name} — ${tagline}">
   <defs>
-    <radialGradient id="glow" cx="14%" cy="20%" r="75%">
-      <stop offset="0%" stop-color="${ACCENT}" stop-opacity="0.09"/>
+    ${SLATE_PATTERN}
+    <radialGradient id="glow" cx="14%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="${ACCENT}" stop-opacity="0.07"/>
       <stop offset="60%" stop-color="${BG}" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="core" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="${ACCENT}" stop-opacity="0.55"/>
-      <stop offset="35%" stop-color="${ACCENT}" stop-opacity="0.12"/>
-      <stop offset="100%" stop-color="${ACCENT}" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="skyFadeGrad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="${fadeStart}" stop-color="#000"/>
-      <stop offset="${fadeFull}" stop-color="#fff"/>
-    </linearGradient>
-    <mask id="skyFade"><rect width="${W}" height="${H}" fill="url(#skyFadeGrad)"/></mask>
+    <filter id="chalk" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.6"/>
+    </filter>
   </defs>
 
-  <rect width="${W}" height="${H}" fill="${BG}"/>
-  <rect width="${W}" height="${H}" fill="url(#glow)"/>
+  <rect width="${W}" height="${H}" rx="18" fill="${BG}"/>
+  <rect width="${W}" height="${H}" rx="18" fill="url(#slate)"/>
+  <rect width="${W}" height="${H}" rx="18" fill="url(#glow)"/>
+  <rect x="12" y="12" width="${W - 24}" height="${H - 24}" rx="14" fill="none" stroke="${INK}" stroke-opacity=".6" stroke-width="1.6"/>
+  <rect x="19" y="19" width="${W - 38}" height="${H - 38}" rx="9" fill="none" stroke="${INK}" stroke-opacity=".35" stroke-width="1"/>
+  <path d="M${RX - 40} 64 V${H - 56}" stroke="${INK}" stroke-opacity=".3" stroke-width="1"/>
 
-  <g mask="url(#skyFade)">
-    ${stars.join('\n    ')}
-    <circle cx="${cx}" cy="${cy}" r="70" fill="url(#core)"/>
-    <circle cx="${cx}" cy="${cy}" r="5" fill="${ACCENT}"/>
-    <g transform="rotate(${tilt} ${cx} ${cy})">
-      ${orbitSvg}
-    </g>
-  </g>
-
-  ${text(mono, kicker, X, 92, 15, ACCENT, { track: 0.18 })}
+  ${text(mono, kicker, X, 98, 14, ACCENT, { track: 0.18 })}
   ${text(mono, name, X, nameBase, nameSize, INK, { track: nameTrack })}
   <rect x="${X}" y="${nameBase + 18}" width="52" height="3" rx="1.5" fill="${ACCENT}"/>
-  ${text(grotesk, tagline, X, nameBase + 60, 22, INK_DIM)}
+  ${text(italic, tagline, X, nameBase + 62, 25, INK_DIM)}
+
+  <g filter="url(#chalk)">
+  ${hat}
+  ${eqParts.join('\n  ')}
+  ${under}
+  ${eqNum}
+  ${fig}
+  </g>
+  ${caption}
 </svg>
 `;
 }
@@ -256,7 +278,7 @@ function buildHistory(data) {
   const metricSvg = metrics
     .map(({ value, label }, i) => {
       const x = X + i * colW;
-      return `${text(grotesk, fmt(value), x, 118, 44, INK)}
+      return `${text(serif, fmt(value), x, 118, 46, INK)}
   ${text(mono, label, x, 146, 11.5, INK_DIM, { track: 0.12 })}`;
     })
     .join('\n  ');
@@ -322,9 +344,9 @@ function buildHistory(data) {
       const label = l.name;
       const pct = `${(l.share * 100).toFixed(l.share < 0.1 ? 1 : 0)}%`;
       const out = `<circle cx="${lx + 5}" cy="${legendY - 5}" r="5" fill="${l.color}"/>
-  ${text(grotesk, label, lx + 16, legendY, 16, INK)}
-  ${text(mono, pct, lx + 22 + measure(grotesk, label, 16), legendY, 13, INK_DIM)}`;
-      lx += 22 + measure(grotesk, label, 16) + measure(mono, pct, 13) + 34;
+  ${text(serif, label, lx + 16, legendY, 17, INK)}
+  ${text(mono, pct, lx + 22 + measure(serif, label, 17), legendY, 13, INK_DIM)}`;
+      lx += 22 + measure(serif, label, 17) + measure(mono, pct, 13) + 34;
       return out;
     })
     .join('\n  ');
@@ -332,7 +354,10 @@ function buildHistory(data) {
   const updated = new Date().toISOString().slice(0, 10);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="GitHub activity of ${LOGIN} over the last 12 months">
+  <defs>${SLATE_PATTERN}</defs>
   <rect width="${W}" height="${H}" rx="14" fill="${BG}"/>
+  <rect width="${W}" height="${H}" rx="14" fill="url(#slate)"/>
+  <rect x="10" y="10" width="${W - 20}" height="${H - 20}" rx="10" fill="none" stroke="${INK}" stroke-opacity=".35" stroke-width="1"/>
   ${text(mono, 'LAST 12 MONTHS', X, 52, 13, ACCENT, { track: 0.2 })}
   ${text(mono, `UPDATED ${updated}`, X + innerW, 52, 11, INK_FAINT, { track: 0.12, anchor: 'end' })}
   ${metricSvg}

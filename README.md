@@ -3,12 +3,13 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/JheisonMB"><img src="https://img.shields.io/badge/GitHub-@JheisonMB-181717?style=for-the-badge&logo=github" alt="GitHub"/></a>
-  <a href="mailto:jheison.mb@gmail.com"><img src="https://img.shields.io/badge/Email-jheison.mb%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Email"/></a>
-  <a href="https://www.linkedin.com/in/jheison-martinez-bolivar/"><img src="https://img.shields.io/badge/LinkedIn-Jheison_Martinez_Bolivar-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
-  <a href="https://github.com/UniverLab"><img src="https://img.shields.io/badge/Org-UniverLab-6A5ACD?style=for-the-badge&logo=github" alt="UniverLab"/></a>
-  <a href="https://univerlab.org"><img src="https://img.shields.io/badge/Web-univerlab.org-6A5ACD?style=for-the-badge&logo=googlechrome&logoColor=white" alt="UniverLab.org"/></a>
-  <img src="https://img.shields.io/badge/MSc-AI%20(in%20progress)-2E8B57?style=for-the-badge" alt="MSc AI"/>
+  <a href="https://github.com/JheisonMB"><img src="https://img.shields.io/badge/GitHub-@JheisonMB-2b3332?style=flat-square&labelColor=1a1f1e&logo=github&logoColor=ecebe4" alt="GitHub"/></a>
+  <a href="mailto:jheison.mb@gmail.com"><img src="https://img.shields.io/badge/Email-jheison.mb%40gmail.com-2b3332?style=flat-square&labelColor=1a1f1e&logo=gmail&logoColor=ecebe4" alt="Email"/></a>
+  <a href="https://www.linkedin.com/in/jheison-martinez-bolivar/"><img src="https://img.shields.io/badge/LinkedIn-Jheison_Martinez_Bolivar-2b3332?style=flat-square&labelColor=1a1f1e&logo=linkedin&logoColor=ecebe4" alt="LinkedIn"/></a>
+  <a href="https://github.com/UniverLab"><img src="https://img.shields.io/badge/Org-UniverLab-2b3332?style=flat-square&labelColor=1a1f1e&logo=github&logoColor=ecebe4" alt="UniverLab"/></a>
+  <a href="https://univerlab.org"><img src="https://img.shields.io/badge/Web-univerlab.org-2b3332?style=flat-square&labelColor=1a1f1e&logo=googlechrome&logoColor=ecebe4" alt="UniverLab.org"/></a>
+  <a href="https://orcid.org/0009-0007-3668-102X"><img src="https://img.shields.io/badge/ORCID-0009--0007--3668--102X-2b3332?style=flat-square&labelColor=1a1f1e&logo=orcid&logoColor=ecebe4" alt="ORCID"/></a>
+  <img src="https://img.shields.io/badge/MSc-AI%20(in%20progress)-2b3332?style=flat-square&labelColor=1a1f1e" alt="MSc AI"/>
 </p>
 
 > *"We are the eyes of the universe opening after a long sleep."*
@@ -21,20 +22,33 @@ I am an Electronic Engineer and Full-Stack Software Engineer focused on Rust CLI
 
 ```yaml
 name: Jheison Martinez Bolivar
-role: IA Engineer @ Accenture | Founder @ UniverLab
+role: AI Engineer @ Accenture | Founder @ UniverLab
 location: Colombia
 focus:
   - Rust CLI architecture
   - AI/ML systems in production
   - Open-source ecosystem design
 currently_building:
-  - texforge
-  - gitkit
-  - ghscaff
-  - agent-canopy
+  - canopy        # agentic runtime: graphs, shared memory, scheduling
+  - texforge      # reproducible LaTeX to PDF
+  - gitkit        # git hooks and repository rules
+  - ghscaff       # GitHub repositories with the lab's rules
+  - demostage     # reproducible demos
+  - quorum        # models that deliberate and vote
+  - astro-denoise # master's thesis: denoising Rubin DC2 images
 education:
-  - MSc in Artificial Intelligence (2026-2027)
+  - MSc in Artificial Intelligence, Universidad de La Salle (2026-2027)
+  - Specialist in Software Development, UNIMINUTO (2023-2024)
+  - Electronic Engineering, CUN (2017-2022)
 ```
+
+---
+
+## 📜 Research and Writing
+
+- **Astro Denoise** — master's thesis: a reproducible benchmark that compares noise-reduction methods on simulated Vera Rubin Observatory DC2 images by the science they recover. [Proposal (PDF)](https://papers.univerlab.org/astro-denoise/proposal.pdf) · [code](https://github.com/UniverLab/astro-denoise)
+- **Pensamiento Cósmico: Filosofía para el hoy y heurística de trascendencia** — essay on the philosophy of science and technology (Spanish). [doi:10.5281/zenodo.23503658](https://doi.org/10.5281/zenodo.23503658)
+- **Detector doméstico de metales aplicando sistemas embebidos** — article. [doi:10.52143/2346139X.933](https://doi.org/10.52143/2346139X.933)
 
 ---
 
@@ -44,7 +58,7 @@ education:
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg" width="38" alt="Rust"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" width="38" alt="Java"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="38" alt="Python"/>
-  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" width="38" alt="Angular"/>
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angular/angular-original.svg" width="38" alt="Angular"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" width="38" alt="JavaScript"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="38" alt="Docker"/>
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/terraform/terraform-original.svg" width="38" alt="Terraform"/>
