@@ -2,8 +2,10 @@
 // services (capsule-render, github-readme-stats) in the rendering path.
 //
 // GitHub serves README SVGs as images and loads no custom fonts, so every
-// piece of text is outlined to vector <path> here. Brand tokens and fonts are
-// UniverLab's (UniverLab/.github scripts/build-banners.mjs).
+// piece of text is outlined to vector <path> here. Brand tokens, fonts and the
+// slate ground are UniverLab's night (UniverLab/.github scripts/build-banners.mjs):
+// chalk on a slate board, Sometype Mono for the typewriter voice, Old Standard TT
+// for the engraving voice.
 //
 //   node build-profile.mjs header            → ../assets/header.svg (static, committed)
 //   node build-profile.mjs history <outdir>  → <outdir>/github-history.svg
@@ -11,22 +13,27 @@
 //                                              .github/workflows/profile-cards.yml)
 
 import opentype from 'opentype.js';
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
 // ── Brand tokens ────────────────────────────────────────────────────────────
-const BG = '#0a0b0e';
-const INK = '#e8e6e1';
-const INK_DIM = '#8b8a86';
-const INK_FAINT = '#4a4a48';
+const BG = '#222928';
+const INK = '#ecebe4';
+const INK_DIM = '#b9bdb5';
+const INK_FAINT = '#6f7873';
 const ACCENT = '#e6c84a';
-const CELL_EMPTY = '#16181d';
+const CELL_EMPTY = '#2d3534';
 
-const mono = opentype.loadSync(join(HERE, 'fonts', 'IBMPlexMono-500.ttf'));
-const grotesk = opentype.loadSync(join(HERE, 'fonts', 'SpaceGrotesk-500.ttf'));
+const mono = opentype.loadSync(join(HERE, 'fonts', 'SometypeMono-wght.ttf'));
+const serif = opentype.loadSync(join(HERE, 'fonts', 'OldStandard-Regular.ttf'));
+const italic = opentype.loadSync(join(HERE, 'fonts', 'OldStandard-Italic.ttf'));
+
+// The slate tile, embedded so every card stays a self-contained SVG.
+const SLATE_TILE = `data:image/webp;base64,${readFileSync(join(HERE, 'assets', 'pizarra.webp')).toString('base64')}`;
+const SLATE_PATTERN = `<pattern id="slate" width="341" height="341" patternUnits="userSpaceOnUse"><image href="${SLATE_TILE}" width="341" height="341"/></pattern>`;
 
 const LOGIN = process.env.PROFILE_LOGIN || 'JheisonMB';
 const ORG = process.env.PROFILE_ORG || 'UniverLab';
@@ -144,6 +151,7 @@ function buildHeader() {
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${name} — ${tagline}">
   <defs>
+    ${SLATE_PATTERN}
     <radialGradient id="glow" cx="14%" cy="20%" r="75%">
       <stop offset="0%" stop-color="${ACCENT}" stop-opacity="0.09"/>
       <stop offset="60%" stop-color="${BG}" stop-opacity="0"/>
@@ -160,8 +168,11 @@ function buildHeader() {
     <mask id="skyFade"><rect width="${W}" height="${H}" fill="url(#skyFadeGrad)"/></mask>
   </defs>
 
-  <rect width="${W}" height="${H}" fill="${BG}"/>
-  <rect width="${W}" height="${H}" fill="url(#glow)"/>
+  <rect width="${W}" height="${H}" rx="18" fill="${BG}"/>
+  <rect width="${W}" height="${H}" rx="18" fill="url(#slate)"/>
+  <rect width="${W}" height="${H}" rx="18" fill="url(#glow)"/>
+  <rect x="12" y="12" width="${W - 24}" height="${H - 24}" rx="14" fill="none" stroke="${INK}" stroke-opacity=".6" stroke-width="1.6"/>
+  <rect x="19" y="19" width="${W - 38}" height="${H - 38}" rx="9" fill="none" stroke="${INK}" stroke-opacity=".35" stroke-width="1"/>
 
   <g mask="url(#skyFade)">
     ${stars.join('\n    ')}
@@ -175,7 +186,7 @@ function buildHeader() {
   ${text(mono, kicker, X, 92, 15, ACCENT, { track: 0.18 })}
   ${text(mono, name, X, nameBase, nameSize, INK, { track: nameTrack })}
   <rect x="${X}" y="${nameBase + 18}" width="52" height="3" rx="1.5" fill="${ACCENT}"/>
-  ${text(grotesk, tagline, X, nameBase + 60, 22, INK_DIM)}
+  ${text(italic, tagline, X, nameBase + 60, 25, INK_DIM)}
 </svg>
 `;
 }
@@ -256,7 +267,7 @@ function buildHistory(data) {
   const metricSvg = metrics
     .map(({ value, label }, i) => {
       const x = X + i * colW;
-      return `${text(grotesk, fmt(value), x, 118, 44, INK)}
+      return `${text(serif, fmt(value), x, 118, 46, INK)}
   ${text(mono, label, x, 146, 11.5, INK_DIM, { track: 0.12 })}`;
     })
     .join('\n  ');
@@ -322,9 +333,9 @@ function buildHistory(data) {
       const label = l.name;
       const pct = `${(l.share * 100).toFixed(l.share < 0.1 ? 1 : 0)}%`;
       const out = `<circle cx="${lx + 5}" cy="${legendY - 5}" r="5" fill="${l.color}"/>
-  ${text(grotesk, label, lx + 16, legendY, 16, INK)}
-  ${text(mono, pct, lx + 22 + measure(grotesk, label, 16), legendY, 13, INK_DIM)}`;
-      lx += 22 + measure(grotesk, label, 16) + measure(mono, pct, 13) + 34;
+  ${text(serif, label, lx + 16, legendY, 17, INK)}
+  ${text(mono, pct, lx + 22 + measure(serif, label, 17), legendY, 13, INK_DIM)}`;
+      lx += 22 + measure(serif, label, 17) + measure(mono, pct, 13) + 34;
       return out;
     })
     .join('\n  ');
@@ -332,7 +343,10 @@ function buildHistory(data) {
   const updated = new Date().toISOString().slice(0, 10);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="GitHub activity of ${LOGIN} over the last 12 months">
+  <defs>${SLATE_PATTERN}</defs>
   <rect width="${W}" height="${H}" rx="14" fill="${BG}"/>
+  <rect width="${W}" height="${H}" rx="14" fill="url(#slate)"/>
+  <rect x="10" y="10" width="${W - 20}" height="${H - 20}" rx="10" fill="none" stroke="${INK}" stroke-opacity=".35" stroke-width="1"/>
   ${text(mono, 'LAST 12 MONTHS', X, 52, 13, ACCENT, { track: 0.2 })}
   ${text(mono, `UPDATED ${updated}`, X + innerW, 52, 11, INK_FAINT, { track: 0.12, anchor: 'end' })}
   ${metricSvg}
